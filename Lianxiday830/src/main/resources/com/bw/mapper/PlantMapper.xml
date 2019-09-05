@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bw.mapper.PlantMapperDao">
+    <select id="findPlantList" resultType="map" parameterType="map">
+      SELECT p.*,t.tname FROM plant  p LEFT JOIN type t on t.tid=p.tid
+      <where>
+        <if test="pname !=null and pname !='' ">
+          and p.pname like concat('%',#{pname},'%')
+        </if>
+      </where>
+    </select>
+  
+  <select id="getTypeList" resultType="type" >
+     select * from type
+  </select>
+  
+  <insert id="add"  parameterType="plant">
+     insert into plant (pname,content,tid) values (#{pname},#{content},#{tid})
+  </insert>
+  
+  <select id="getPlantById" resultType="plant" parameterType="plant">
+    select * from plant where pid=#{pid}
+  </select>
+  
+  <update id="update" parameterType="plant">
+     update plant set pname=#{pname},content=#{content},tid=#{tid} where pid=#{pid}
+  </update>
+  
+  <delete id="deleteAll" >
+    delete from plant where pid in
+    <foreach collection="array" item="pid" open="(" separator="," close=")">
+       #{pid}
+    </foreach>
+  </delete>
+  </mapper>
